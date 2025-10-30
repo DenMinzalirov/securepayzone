@@ -113,16 +113,16 @@ export async function POST(req: NextRequest) {
       },
     }
 
-    return NextResponse.json({ ok: true, providerBody })
+    // return NextResponse.json({ ok: true, providerBody })
 
-    // const res = await fetch('https://api.securepayzone.com/api/request/create', {
-    //   method: 'POST',
-    //   headers: { 'content-type': 'application/json' },
-    //   body: JSON.stringify(providerBody),
-    // })
+    const res = await fetch('https://api.securepayzone.com/api/request/create', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(providerBody),
+    })
 
-    // const json = await res.json().catch(() => ({}))
-    // return NextResponse.json(json, { status: res.status })
+    const json = await res.json().catch(() => ({}))
+    return NextResponse.json(json, { status: res.status })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message || 'Unexpected error' }, { status: 500 })
   }
