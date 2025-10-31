@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
         payment_method_payload: {
           card_holder_name: cardHolderName,
           card_type: CARD_TYPE,
-          card_number: String(cardNumber),
+          card_number: String(cardNumber).replace(/\s+/g, ''),
           expiry_month: String(expMonth),
           expiry_year: String(expYear),
           cvv: String(cvv),
