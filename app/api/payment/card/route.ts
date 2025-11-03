@@ -54,6 +54,9 @@ export async function POST(req: NextRequest) {
       lastName,
       email,
       mobile,
+      city,
+      address,
+      postal_code,
     } = body ?? {}
 
     if (!amount || !cardNumber || !expMonth || !expYear || !cvv || !cardHolderName || !firstName || !lastName || !email || !mobile) {
@@ -99,6 +102,9 @@ export async function POST(req: NextRequest) {
           mobile,
           country: COUNTRY,
           ip_address: IP_ADDRESS,
+          city,
+          address,
+          postal_code,
         },
         payment_payload: {
           payment_ref_id: paymentRefId,

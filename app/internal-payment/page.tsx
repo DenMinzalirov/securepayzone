@@ -18,6 +18,9 @@ const paymentSchema = z.object({
   lastName: z.string().min(2, 'Last name is required'),
   email: z.string().email('Invalid email'),
   mobile: z.string().min(5, 'Mobile is required'),
+  city: z.string().optional(),
+  address: z.string().optional(),
+  postal_code: z.string().optional(),
 })
 
 type PaymentFormData = z.infer<typeof paymentSchema>
@@ -59,6 +62,9 @@ export default function InternalPaymentPage() {
         lastName: data.lastName,
         email: data.email,
         mobile: data.mobile,
+        city: data.city,
+        address: data.address,
+        postal_code: data.postal_code,
       }
       console.log('payload', payload);
 
@@ -75,6 +81,13 @@ export default function InternalPaymentPage() {
       console.log('CARD API Response:', result)
 
       if (!response.ok) {
+        router.push('/payment-failure')
+        return
+      }
+
+      // Проверка payment_status
+      const paymentStatus = result?.response_payload?.payment_result?.payment_status ?? result?.response_payload?.payment_status ?? result?.payment_status
+      if (paymentStatus === 'FAILED') {
         router.push('/payment-failure')
         return
       }
@@ -292,9 +305,26 @@ export default function InternalPaymentPage() {
             </div>
           </div>
 
-          <button type="submit" disabled={loading}>
-            {loading ? 'Processing...' : 'Pay now'}
-          </button>
+          <div className="form-row" style={{ display: 'flex', gap: 12 }}>
+            <div className="form-group" style={{ flex: 1 }}>
+              <label htmlFor="city">City</label>
+              <input type="text" id="city" {...register('city')} placeholder="Beijing" />
+            </div>
+            <div className="form-group" style={{ flex: 2 }}>
+              <label htmlFor="address">Address</label>
+              <input type="text" id="address" {...register('address')} placeholder="123 Main St" />
+            </div>
+            <div className="form-group" style={{ flex: 1 }}>
+              <label htmlFor="postal_code">Postal code</label>
+              <input type="text" id="postal_code" {...register('postal_code')} placeholder="100000" />
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: 12 }}>
+            <button type="submit" disabled={loading}>
+              {loading ? 'Processing...' : 'Pay now'}
+            </button>
+          </div>
         </form>
       </div>
     </div>
