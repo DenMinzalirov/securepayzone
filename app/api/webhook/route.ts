@@ -59,15 +59,15 @@ export async function POST(request: Request) {
     const body = await request.json()
     
     // Логируем полный запрос в читаемом формате
-    const logText = formatWebhookLog(body, clientIp)
-    console.log(logText)
+    // const logText = formatWebhookLog(body, clientIp)
+    // console.log(logText)
     
     // Отдельный лог с текстовой сериализацией JSON через JSON.stringify
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-    console.log('📋 ТЕКСТОВАЯ СЕРИАЛИЗАЦИЯ WEBHOOK JSON:')
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-    console.log(JSON.stringify(body, null, 2))
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+    // console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+    // console.log('📋 ТЕКСТОВАЯ СЕРИАЛИЗАЦИЯ WEBHOOK JSON:')
+    // console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+    // console.log(JSON.stringify(body, null, 2))
+    // console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
     
     // Также логируем как JSON для удобства парсинга
     console.log('WEBHOOK_JSON:', JSON.stringify({
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
     
     // ⚠️ ВНИМАНИЕ: Проверка подписи ОТКЛЮЧЕНА для тестирования!
     // TODO: Включить обратно перед production деплоем!
-    console.warn('⚠️⚠️⚠️ SIGNATURE VERIFICATION DISABLED FOR TESTING ⚠️⚠️⚠️')
+    // console.warn('⚠️⚠️⚠️ SIGNATURE VERIFICATION DISABLED FOR TESTING ⚠️⚠️⚠️')
     
     // Проверяем подпись webhook (ОТКЛЮЧЕНО для тестирования)
     // const signature = body.signature
@@ -95,25 +95,25 @@ export async function POST(request: Request) {
     // }
 
     // Обрабатываем webhook от Securezone
-    const {
-      order_id,
-      status,
-      transaction_id,
-      amount,
-      currency,
-      timestamp: webhookTimestamp,
-    } = body
+    // const {
+    //   order_id,
+    //   status,
+    //   transaction_id,
+    //   amount,
+    //   currency,
+    //   timestamp: webhookTimestamp,
+    // } = body
 
-    console.log('✅ Webhook received from Securezone:', {
-      timestamp,
-      ip: clientIp,
-      orderId: order_id,
-      status,
-      transactionId: transaction_id,
-      amount,
-      currency,
-      webhookTimestamp,
-    })
+    // console.log('✅ Webhook received from Securezone:', {
+    //   timestamp,
+    //   ip: clientIp,
+    //   orderId: order_id,
+    //   status,
+    //   transactionId: transaction_id,
+    //   amount,
+    //   currency,
+    //   webhookTimestamp,
+    // })
 
     // Здесь можно добавить логику:
     // 1. Обновить статус заказа в БД

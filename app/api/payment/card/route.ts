@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
-    console.log('body', body);
+    console.log('body-request', body);
     
     const {
       amount,
@@ -128,6 +128,7 @@ export async function POST(req: NextRequest) {
     })
 
     const json = await res.json().catch(() => ({}))
+    console.log('body-response-json', JSON.stringify(json, null, 2));
     return NextResponse.json(json, { status: res.status })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message || 'Unexpected error' }, { status: 500 })
