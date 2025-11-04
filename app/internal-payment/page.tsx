@@ -324,6 +324,9 @@ export default function InternalPaymentPage() {
             <button type="submit" disabled={loading}>
               {loading ? 'Processing...' : 'Pay now'}
             </button>
+            {/* <button type="button" onClick={testDirectCardPayin}>
+              Quick Test (direct)
+            </button> */}
           </div>
         </form>
       </div>
