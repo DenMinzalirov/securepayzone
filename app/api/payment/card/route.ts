@@ -41,10 +41,10 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
-    console.log('body-request', body);
     
     const {
       amount,
+      currency,
       cardNumber,
       expMonth,
       expYear,
@@ -59,14 +59,19 @@ export async function POST(req: NextRequest) {
       postal_code,
     } = body ?? {}
 
-    if (!amount || !cardNumber || !expMonth || !expYear || !cvv || !cardHolderName || !firstName || !lastName || !email || !mobile) {
+    if (!amount || !currency || !cardNumber || !expMonth || !expYear || !cvv || !cardHolderName || !firstName || !lastName || !email || !mobile) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+    }
+
+    // Валидация валюты
+    if (currency !== 'CNY' && currency !== 'USD') {
+      return NextResponse.json({ error: 'Invalid currency. Must be CNY or USD' }, { status: 400 })
     }
 
     // Constants adjustable in code (per user request)
     const COUNTRY = 'CN' // ISO-2
-    const CURRENCY = 'CNY' // ISO-3
-    const CATEGORY_CLASS: 'VIP' | 'NonVIP' = 'NonVIP'
+    const CURRENCY = currency // ISO-3 (из запроса)
+    const CATEGORY_CLASS: 'VIP' | 'NonVIP' = 'VIP'
     const DEVICE_FINGERPRINT = 'NA'
     const IP_ADDRESS = getClientIp(req)
     const CARD_TYPE: CardType = String(cardNumber).startsWith('62')
@@ -118,6 +123,8 @@ export async function POST(req: NextRequest) {
         },
       },
     }
+
+    console.log('body-request', providerBody);
 
     // return NextResponse.json({ ok: true, providerBody })
 

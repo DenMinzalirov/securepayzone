@@ -9,6 +9,9 @@ import { useRouter } from 'next/navigation'
 // Form schema (CARD minimal fields)
 const paymentSchema = z.object({
   amount: z.string().min(1, 'Amount is required'),
+  currency: z.enum(['CNY', 'USD'], {
+    errorMap: () => ({ message: 'Please select a valid currency' }),
+  }),
   cardNumber: z.string().min(12, 'Card number is required'),
   expMonth: z.string().min(1, 'Exp month is required'),
   expYear: z.string().min(2, 'Exp year is required'),
@@ -43,6 +46,9 @@ export default function InternalPaymentPage() {
 
   const { register, handleSubmit, formState: { errors } } = useForm<PaymentFormData>({
     resolver: zodResolver(paymentSchema),
+    defaultValues: {
+      currency: 'CNY', // По умолчанию CNY
+    },
   })
 
   const onSubmit = async (data: PaymentFormData) => {
@@ -53,6 +59,7 @@ export default function InternalPaymentPage() {
     try {
       const payload = {
         amount: Number(data.amount),
+        currency: data.currency,
         cardNumber: data.cardNumber,
         expMonth: data.expMonth,
         expYear: data.expYear,
@@ -83,6 +90,12 @@ export default function InternalPaymentPage() {
       if (!response.ok) {
         router.push('/payment-failure')
         return
+      }
+
+      // Проверка наличия payment_link и открытие в новой вкладке
+      const paymentLink = result?.response_payload?.payment_result?.payment_link
+      if (paymentLink && typeof paymentLink === 'string' && paymentLink.trim() !== '') {
+        window.open(paymentLink, '_blank')
       }
 
       // Проверка payment_status
@@ -141,10 +154,20 @@ export default function InternalPaymentPage() {
         )}
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="form-group">
-            <label htmlFor="amount">Amount *</label>
-            <input type="number" step="0.01" id="amount" {...register('amount')} placeholder="100.00" />
-            {errors.amount && <div className="error">{errors.amount.message}</div>}
+          <div className="form-row" style={{ display: 'flex', gap: 12 }}>
+            <div className="form-group" style={{ flex: 2 }}>
+              <label htmlFor="amount">Amount *</label>
+              <input type="number" step="0.01" id="amount" {...register('amount')} placeholder="100.00" />
+              {errors.amount && <div className="error">{errors.amount.message}</div>}
+            </div>
+            <div className="form-group" style={{ flex: 1 }}>
+              <label htmlFor="currency">Currency *</label>
+              <select id="currency" {...register('currency')}>
+                <option value="CNY">CNY</option>
+                <option value="USD">USD</option>
+              </select>
+              {errors.currency && <div className="error">{errors.currency.message}</div>}
+            </div>
           </div>
 
           <div className="form-group">
