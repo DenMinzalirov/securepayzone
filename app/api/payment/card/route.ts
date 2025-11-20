@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
     const AUTHKEY = process.env.SECUREZONE_AUTH_KEY
     const SECRETKEY = process.env.SECUREZONE_SECRET_KEY
     const NOTIFICATION_URL = process.env.NOTIFICATION_URL
+    const RETURN_URL = process.env.RETURN_URL
 
     if (!AUTHKEY || !SECRETKEY || !NOTIFICATION_URL) {
       return NextResponse.json({ error: 'Server env not configured' }, { status: 500 })
@@ -116,6 +117,7 @@ export async function POST(req: NextRequest) {
           request_amount: Number(amount),
           currency: CURRENCY,
           notification_url: NOTIFICATION_URL,
+          return_url: RETURN_URL,
         },
         risk_payload: {
           category_class: CATEGORY_CLASS,
